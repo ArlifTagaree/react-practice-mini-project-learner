@@ -1,5 +1,6 @@
 import Card from './Card/Card';
 import './App.css'
+import { useState } from 'react';
 
 const movies = [
   {
@@ -22,14 +23,42 @@ const movies = [
 // DRY
 
 export default function App() {
+  const [selectedMovie, setSelectedMovie] = useState([])
+
+  // const [movietitle, setMovietitle] = useState('')
+  
+  const handleClick = (movietitle) => {
+    // setMovietitle(movietitle)
+
+    if(selectedMovie.includes(movietitle)) {
+      setSelectedMovie(prev => {
+        return prev.filter(ele => ele !== movietitle)
+      })
+    } else {
+      setSelectedMovie(prev => {
+        return [...prev, movietitle]}) // ใช้วิธีนี้เพราะถ้าใช้ push array จะไม่มีการเปลี่ยนค่า ทำให้ใช้ useState ([]) ไม่เปลี่ยนแปลง
+    }
+    
+  }
+
 
   return (
     <>
-    <div className='card-container'>
+      <div className='card-container'>
+        <ul>
+          {
+            selectedMovie.map((movie)=> {
+              return <li key = {movie}>{movie}</li>
+            })
+          }
+        </ul>
+      {/* {movietitle} */}
       {/* วน render card ออกมาตามจำนวนของที่อยู่ใน array */}
       {movies.map((ele) => 
        // eslint-disable-next-line react/jsx-key
-        <Card key={ele.title} title={ele.title} 
+        <Card key={ele.title} 
+        handleClick={handleClick}
+        title={ele.title} 
        image={ele.image} />
       // <Card key={ele.title} movieData={ele} />
       )}
